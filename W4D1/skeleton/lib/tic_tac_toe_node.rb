@@ -2,39 +2,46 @@ require_relative 'tic_tac_toe'
 
 class TicTacToeNode
   def initialize(board, next_mover_mark, prev_move_pos = nil)
-    @board = Board.new
+    @board = board
     @next_mover_mark = next_mover_mark
     @prev_move_pos = prev_move_pos
   end
 
-  def losing_node?(evaluator)
-  end
+  attr_reader :board, :next_mover_mark, :prev_move_pos
+  # def losing_node?(evaluator)
+  #   return true if @board.over? && @board.winner != evaluator
+  #   return false if @board.winner.nil? || @board.winner == evaluator
+  #   if turn == evaluator && losing_node?()
 
-  def winning_node?(evaluator)
-  end
+  #   elsif turn != evaluator
+  #   end
+  #   losing_node?()
+  # end
+
+  # # def winning_node?(evaluator)
+  # # end
 
   # This method generates an array of all moves that can be made after
   # the current move.
   def children
       children_arr = []
-      moves = self.find_valid_move
-      moves.each do |position| #position
-        children_arr << TicTacToeNode.new(board, next_mover_mark,position)
+      if next_mover_mark == :x
+        next_mover_mark = :o
+      else
+        next_mover_mark = :x
       end
-    end
-  end
-
-  def find_valid_move
-    valid_move = []
-    (0...@board.length).each do |idx1|
-      (0...@board.length).each do |idx2|
-        current = [idx1,idx2]
-        if @board.empty?(current)
-          valid_move << current
+      (0...3).each do |idx1|
+        (0...3).each do |idx2|
+          current = [idx1,idx2]
+          if @board.empty?(current)
+            new_board = board.dup
+            children_arr << TicTacToeNode.new(new_board, next_mover_mark, current)
+            
+          end
         end
       end
-    end
-    valid_move
+      children_arr
   end
+
 
 end
