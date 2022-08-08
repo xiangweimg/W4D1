@@ -36,18 +36,14 @@ class TicTacToeNode
   # the current move.
   def children
       children_arr = []
-      if next_mover_mark == :x
-        next_mover_mark = :o
-      else
-        next_mover_mark = :x
-      end
       (0...3).each do |idx1|
         (0...3).each do |idx2|
-          current = [idx1,idx2]
-          if @board.empty?(current)
+          current = [idx1,idx2] #parent X [0,0]
+          if @board.empty?(current) #possbile X positions
             new_board = board.dup
-            new_board[current] = next_mover_mark
-            children_arr << TicTacToeNode.new(new_board, next_mover_mark, current)
+            new_board[current] = next_mover_mark #X
+            next_mover_mark == :x ? next_mover_mark = :o : next_mover_mark = :x
+            children_arr << TicTacToeNode.new(new_board, next_mover_mark, current) #0
           end
         end
       end
