@@ -1,22 +1,33 @@
 require_relative 'tic_tac_toe'
 
 class TicTacToeNode
+  
+  attr_reader :board, :next_mover_mark, :prev_move_pos
+
   def initialize(board, next_mover_mark, prev_move_pos = nil)
     @board = board
     @next_mover_mark = next_mover_mark
     @prev_move_pos = prev_move_pos
   end
 
-  attr_reader :board, :next_mover_mark, :prev_move_pos
-  # def losing_node?(evaluator)
-  #   return true if @board.over? && @board.winner != evaluator
-  #   return false if @board.winner.nil? || @board.winner == evaluator
-  #   if turn == evaluator && losing_node?()
-
-  #   elsif turn != evaluator
-  #   end
-  #   losing_node?()
-  # end
+  def losing_node?(evaluator)
+    if board.over?
+      return false if board.winner.nil? || board.winner == evaluator
+      return true if board.winner != evaluator
+    end
+    
+    if evaluator == next_mover_mark #we are the player
+      self.children.each do |child_node|
+        return false if !child_node.losing_node?(evaluator)
+      end
+      return true
+    elsif evaluator != next_mover_mark #we are not the player
+      self.children.each do |child_node|
+        return true if child_node.losing_node?(evaluator)
+      end
+      return false
+    end
+  end
 
   # # def winning_node?(evaluator)
   # # end
@@ -35,13 +46,12 @@ class TicTacToeNode
           current = [idx1,idx2]
           if @board.empty?(current)
             new_board = board.dup
+            new_board[current] = next_mover_mark
             children_arr << TicTacToeNode.new(new_board, next_mover_mark, current)
-            
           end
         end
       end
       children_arr
-  end
-
+    end
 
 end
